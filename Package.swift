@@ -6,6 +6,7 @@ import PackageDescription
 
 var swiftSettings: [SwiftSetting] = [
     .define("SQLITE_ENABLE_FTS5"),
+    .define("SQLITE_ENABLE_SNAPSHOT")
 ]
 var cSettings: [CSetting] = []
 var dependencies: [PackageDescription.Package.Dependency] = []
@@ -46,13 +47,35 @@ let package = Package(
     ],
     dependencies: dependencies,
     targets: [
-        .systemLibrary(
+        .target(
             name: "CSQLite",
-            providers: [.apt(["libsqlite3-dev"])]),
+            publicHeadersPath: ".",
+            cSettings: [
+                .define("SQLITE_ENABLE_SNAPSHOT"),
+                .define("ENABLE_API_ARMOR"),
+                .define("ENABLE_FTS3"),
+                .define("ENABLE_FTS3_PARENTHESIS"),
+                .define("ENABLE_FTS5"),
+                .define("ENABLE_LOCKING_STYLE", to: "0"), // may need to set to 1 for mac os
+                .define("ENABLE_RTREE"),
+                .define("ENABLE_UPDATE_DELETE_LIMIT"),
+                .define("OMIT_AUTORESET"),
+                .define("OMIT_BUILTIN_TEST"),
+                .define("OMIT_LOAD_EXTENSION"),
+                .define("SYSTEM_MALLOC"),
+                .define("THREADSAFE", to: "2"),
+                .unsafeFlags(["-w"])
+            ]
+        ),
+        .binaryTarget(
+            name: "libsimple",
+            path: "Sources/libsimple.xcframework"
+        ),
         .target(
             name: "GRDB",
-            dependencies: ["CSQLite"],
+            dependencies: ["CSQLite", "libsimple"],
             path: "GRDB",
+            resources: [.copy("JIEBA.bundle")],
             cSettings: cSettings,
             swiftSettings: swiftSettings),
         .testTarget(

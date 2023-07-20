@@ -377,7 +377,8 @@ public final class Database: CustomStringConvertible, CustomDebugStringConvertib
     private static func openConnection(path: String, flags: CInt) throws -> SQLiteConnection {
         // See <https://www.sqlite.org/c3ref/open.html>
         var sqliteConnection: SQLiteConnection? = nil
-        let code = sqlite3_open_v2(path, &sqliteConnection, flags, nil)
+        var code = sqlite3_auto_extension(sqlite3_simple_init_wrapper())
+        code = sqlite3_open_v2(path, &sqliteConnection, flags, nil)
         guard code == SQLITE_OK else {
             // https://www.sqlite.org/c3ref/open.html
             // > Whether or not an error occurs when it is opened, resources
@@ -416,7 +417,8 @@ public final class Database: CustomStringConvertible, CustomDebugStringConvertib
         
         // Last step before we can start accessing the database.
         try configuration.setUp(self)
-        
+
+
         try validateFormat()
         configuration.SQLiteConnectionDidOpen?()
     }
@@ -499,6 +501,11 @@ public final class Database: CustomStringConvertible, CustomDebugStringConvertib
         guard code == SQLITE_OK else {
             throw DatabaseError(resultCode: code, message: String(cString: sqlite3_errmsg(sqliteConnection)))
         }
+    }
+
+    private func setJiebaDict() throws {
+        let kJiebaPath = Bundle.module.path(forResource: "JIEBA", ofType: "bundle")!
+        try execute(sql: "select jieba_dict('\(kJiebaPath)')")
     }
     
     #if SQLITE_HAS_CODEC

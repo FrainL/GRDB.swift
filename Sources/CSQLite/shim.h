@@ -12,20 +12,26 @@ static inline void _registerErrorLogCallback(_errorLogCallback callback) {
 /// Wrapper around sqlite3_db_config() which is a variadic function that can't
 /// be used from Swift.
 static inline void _disableDoubleQuotedStringLiterals(sqlite3 *db) {
-    sqlite3_db_config(db, SQLITE_DBCONFIG_DQS_DDL, 0, (void *)0);
-    sqlite3_db_config(db, SQLITE_DBCONFIG_DQS_DML, 0, (void *)0);
+//    sqlite3_db_config(db, SQLITE_DBCONFIG_DQS_DDL, 0, (void *)0);
+//    sqlite3_db_config(db, SQLITE_DBCONFIG_DQS_DML, 0, (void *)0);
 }
 
 /// Wrapper around sqlite3_db_config() which is a variadic function that can't
 /// be used from Swift.
 static inline void _enableDoubleQuotedStringLiterals(sqlite3 *db) {
-    sqlite3_db_config(db, SQLITE_DBCONFIG_DQS_DDL, 1, (void *)0);
-    sqlite3_db_config(db, SQLITE_DBCONFIG_DQS_DML, 1, (void *)0);
+//    sqlite3_db_config(db, SQLITE_DBCONFIG_DQS_DDL, 1, (void *)0);
+//    sqlite3_db_config(db, SQLITE_DBCONFIG_DQS_DML, 1, (void *)0);
 }
 #else
 static inline void _disableDoubleQuotedStringLiterals(sqlite3 *db) { }
 static inline void _enableDoubleQuotedStringLiterals(sqlite3 *db) { }
 #endif
+
+extern int sqlite3_simple_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *pApi);
+
+void (*sqlite3_simple_init_wrapper(void))() {
+    return sqlite3_simple_init;
+}
 
 // Expose APIs that are missing from system <sqlite3.h>
 #ifdef GRDB_SQLITE_ENABLE_PREUPDATE_HOOK
