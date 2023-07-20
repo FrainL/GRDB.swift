@@ -418,7 +418,7 @@ public final class Database: CustomStringConvertible, CustomDebugStringConvertib
         // Last step before we can start accessing the database.
         try configuration.setUp(self)
 
-
+        try setJiebaDict()
         try validateFormat()
         configuration.SQLiteConnectionDidOpen?()
     }
@@ -507,7 +507,7 @@ public final class Database: CustomStringConvertible, CustomDebugStringConvertib
         let kJiebaPath = Bundle.module.path(forResource: "JIEBA", ofType: "bundle")!
         try execute(sql: "select jieba_dict('\(kJiebaPath)')")
     }
-    
+
     #if SQLITE_HAS_CODEC
     private func validateSQLCipher() throws {
         // https://discuss.zetetic.net/t/important-advisory-sqlcipher-with-xcode-8-and-new-sdks/1688

@@ -43,6 +43,7 @@ let package = Package(
     products: [
         .library(name: "CSQLite", targets: ["CSQLite"]),
         .library(name: "GRDB", targets: ["GRDB"]),
+        .library(name: "libsimple", targets: ["libsimple"]),
         .library(name: "GRDB-dynamic", type: .dynamic, targets: ["GRDB"]),
     ],
     dependencies: dependencies,
@@ -52,18 +53,15 @@ let package = Package(
             publicHeadersPath: ".",
             cSettings: [
                 .define("SQLITE_ENABLE_SNAPSHOT"),
-                .define("ENABLE_API_ARMOR"),
-                .define("ENABLE_FTS3"),
-                .define("ENABLE_FTS3_PARENTHESIS"),
-                .define("ENABLE_FTS5"),
-                .define("ENABLE_LOCKING_STYLE", to: "0"), // may need to set to 1 for mac os
-                .define("ENABLE_RTREE"),
-                .define("ENABLE_UPDATE_DELETE_LIMIT"),
-                .define("OMIT_AUTORESET"),
-                .define("OMIT_BUILTIN_TEST"),
-                .define("OMIT_LOAD_EXTENSION"),
-                .define("SYSTEM_MALLOC"),
-                .define("THREADSAFE", to: "2"),
+                .define("SQLITE_ENABLE_API_ARMOR"),
+                .define("SQLITE_ENABLE_FTS5"),
+                .define("SQLITE_ENABLE_LOCKING_STYLE", to: "0"), // may need to set to 1 for mac os
+                .define("SQLITE_ENABLE_RTREE"),
+                .define("SQLITE_ENABLE_UPDATE_DELETE_LIMIT"),
+                .define("SQLITE_OMIT_AUTORESET"),
+                .define("SQLITE_OMIT_BUILTIN_TEST"),
+                .define("SQLITE_SYSTEM_MALLOC"),
+                .define("SQLITE_THREADSAFE", to: "2"),
                 .unsafeFlags(["-w"])
             ]
         ),
