@@ -439,8 +439,10 @@ extension Row {
     }
 
     @inlinable
-    public subscript<Value: DatabaseValueConvertible>(throwing columnName: String) throws -> Value {
-        try decode(Value.self, forKey: columnName)
+    public subscript<Value: DatabaseValueConvertible>(throwing columnName: String) -> Value {
+        get throws {
+            try decode(Value.self, forKey: columnName)
+        }
     }
     
     /// Returns the value at given column, converted to the requested type.
